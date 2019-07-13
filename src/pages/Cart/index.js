@@ -13,6 +13,7 @@ import {
   ProductPrice,
   PriceInfo,
   Amount,
+  UpdateAmountButton,
   AmountInput,
   AmountPrice,
   RemoveButton,
@@ -65,9 +66,13 @@ class Cart extends Component {
         </ProductInfo>
         <PriceInfo>
           <Amount>
-            <Icon name="remove-circle-outline" color="#7159C1" size={20} />
+            <UpdateAmountButton>
+              <Icon name="remove-circle-outline" color="#7159C1" size={20} />
+            </UpdateAmountButton>
             <AmountInput>3</AmountInput>
-            <Icon name="add-circle-outline" color="#7159C1" size={20} />
+            <UpdateAmountButton>
+              <Icon name="add-circle-outline" color="#7159C1" size={20} />
+            </UpdateAmountButton>
           </Amount>
           <AmountPrice>{formatPrice(539)}</AmountPrice>
         </PriceInfo>

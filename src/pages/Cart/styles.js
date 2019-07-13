@@ -58,6 +58,8 @@ export const Amount = styled.View`
   align-items: center;
 `;
 
+export const UpdateAmountButton = styled(RectButton)``;
+
 export const AmountInput = styled.TextInput`
   width: 50px;
   height: 26px;
