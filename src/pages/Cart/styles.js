@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import { Dimensions } from 'react-native';
 
 export const Container = styled.View`
   background: #141419;
@@ -12,6 +13,7 @@ export const Products = styled.View`
   background: #fff;
   border-radius: 4px;
   padding: 15px;
+  max-height: ${Dimensions.get('screen').height - 45}px;
 `;
 
 export const ProductInfo = styled.View`

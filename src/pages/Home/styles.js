@@ -7,26 +7,28 @@ export const Container = styled.View`
 `;
 
 export const Product = styled.View`
+  flex: 1;
   background: #fff;
-  width: 220px;
-  height: 358px;
   border-radius: 4px;
   margin: 15px;
   padding: 10px;
 `;
 
 export const ProductImage = styled.Image`
-  width: 200px;
-  height: 200px;
+  width: 250;
+  height: 250;
+  margin: auto;
 `;
 
 export const ProductTitle = styled.Text`
+  flex: 1;
   font-size: 16px;
   line-height: 21px;
   padding: 0 7px;
 `;
 
 export const PriceAndActionContainer = styled.View`
+  flex: 1;
   margin-top: auto;
 `;
 
@@ -34,6 +36,7 @@ export const ProductPrice = styled.Text`
   font-weight: bold;
   font-size: 21;
   padding: 0 7px;
+  margin-top: 5px;
 `;
 
 export const AddToCartButton = styled(RectButton)`
@@ -61,7 +64,7 @@ export const ProductAmount = styled.Text`
 
 export const ButtonText = styled.Text`
   font-size: 14px;
-  width: 147px;
+  flex: 1;
   text-align: center;
   color: #fff;
   padding: 12px;

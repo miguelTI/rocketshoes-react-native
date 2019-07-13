@@ -69,7 +69,7 @@ class Home extends Component {
               <Icon name="shopping-cart" color="#FFF" size={14} />
               <ProductAmount>{amount[item.id] || 0}</ProductAmount>
             </ProductAmountContainer>
-            <ButtonText>Adicionar</ButtonText>
+            <ButtonText>Adicionar ao carrinho</ButtonText>
           </AddToCartButton>
         </PriceAndActionContainer>
       </Product>
@@ -82,7 +82,6 @@ class Home extends Component {
     return (
       <Container>
         <FlatList
-          horizontal
           data={products}
           keyExtractor={item => String(item.id)}
           renderItem={this.renderProduct}
