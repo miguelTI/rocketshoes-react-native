@@ -10,6 +10,7 @@ const Routes = createAppContainer(
       Cart,
     },
     {
+      initialRouteName: 'Cart',
       headerLayoutPreset: 'center',
       headerBackTitleVisible: false,
       defaultNavigationOptions: {
