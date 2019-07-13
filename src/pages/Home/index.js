@@ -4,6 +4,7 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { formatPrice } from '../../utils/format';
 import * as CartActions from '../../store/modules/cart/actions';
 
@@ -65,6 +66,7 @@ class Home extends Component {
           <ProductPrice>{item.priceFormatted}</ProductPrice>
           <AddToCartButton onPress={() => this.handleAddProduct(item.id)}>
             <ProductAmountContainer>
+              <Icon name="shopping-cart" color="#FFF" size={14} />
               <ProductAmount>{amount[item.id] || 0}</ProductAmount>
             </ProductAmountContainer>
             <ButtonText>Adicionar</ButtonText>

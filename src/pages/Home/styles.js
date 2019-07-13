@@ -48,6 +48,9 @@ export const ProductAmountContainer = styled.View`
   width: 53px;
   background: rgba(0, 0, 0, 0.2);
   padding: 12px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const ProductAmount = styled.Text`
