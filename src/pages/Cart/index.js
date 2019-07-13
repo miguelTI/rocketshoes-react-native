@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -28,13 +29,7 @@ import {
   ButtonText,
 } from './styles';
 
-function Cart({
-  navigation,
-  products,
-  total,
-  removeFromCart,
-  updateAmountRequest,
-}) {
+function Cart({ products, total, removeFromCart, updateAmountRequest }) {
   function increment(product) {
     updateAmountRequest(product.id, product.amount + 1);
   }
@@ -107,6 +102,44 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(CartActions, dispatch);
+
+Cart.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }).isRequired,
+  removeFromCart: PropTypes.func.isRequired,
+  updateAmountRequest: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.number,
+    image: PropTypes.string,
+    title: PropTypes.string,
+    price: PropTypes.number,
+    amount: PropTypes.number,
+    subtotal: PropTypes.string,
+  }),
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      image: PropTypes.string,
+      title: PropTypes.string,
+      price: PropTypes.number,
+      amount: PropTypes.number,
+      subtotal: PropTypes.string,
+    })
+  ).isRequired,
+  total: PropTypes.string.isRequired,
+};
+
+Cart.defaultProps = {
+  item: {
+    id: 0,
+    image: '',
+    title: '',
+    price: 0,
+    amount: 0,
+    subtotal: '',
+  },
+};
 
 export default connect(
   mapStateToProps,

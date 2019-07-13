@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,6 +25,14 @@ import {
 class Home extends Component {
   state = {
     products: [],
+  };
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
+    addToCartRequest: PropTypes.func.isRequired,
+    amount: PropTypes.objectOf(PropTypes.number).isRequired,
   };
 
   async componentDidMount() {
