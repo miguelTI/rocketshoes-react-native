@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { formatPrice } from '../../utils/format';
+import * as CartActions from '../../store/modules/cart/actions';
+
+import api from '../../services/api';
 
 import {
   Container,
@@ -16,43 +21,42 @@ import {
   ButtonText,
 } from './styles';
 
-export default class Home extends Component {
+class Home extends Component {
   state = {
-    products: [
-      {
-        id: 1,
-        title: 'Tênis de Caminhada Leve Confortável',
-        price: 179.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-      },
-      {
-        id: 2,
-        title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-        price: 139.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-      },
-      {
-        id: 3,
-        title: 'Tênis Adidas Duramo Lite 2.0',
-        price: 219.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg',
-      },
-    ],
+    products: [],
+  };
+
+  async componentDidMount() {
+    const response = await api.get('products');
+
+    const data = response.data.map(product => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
+
+    this.setState({
+      products: data,
+    });
+  }
+
+  handleAddProduct = id => {
+    const { addToCartRequest } = this.props;
+
+    addToCartRequest(id);
   };
 
   renderProduct = ({ item }) => {
+    const { amount } = this.props;
+
     return (
       <Product>
         <ProductImage source={{ uri: item.image }} />
         <ProductTitle>{item.title}</ProductTitle>
         <PriceAndActionContainer>
-          <ProductPrice>{formatPrice(item.price)}</ProductPrice>
-          <AddToCartButton>
+          <ProductPrice>{item.priceFormatted}</ProductPrice>
+          <AddToCartButton onPress={() => this.handleAddProduct(item.id)}>
             <ProductAmountContainer>
-              <ProductAmount>1</ProductAmount>
+              <ProductAmount>{amount[item.id] || 0}</ProductAmount>
             </ProductAmountContainer>
             <ButtonText>Adicionar</ButtonText>
           </AddToCartButton>
@@ -71,8 +75,25 @@ export default class Home extends Component {
           data={products}
           keyExtractor={item => String(item.id)}
           renderItem={this.renderProduct}
+          extraData={this.props}
         />
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+
+    return amount;
+  }, {}),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

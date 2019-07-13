@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as CartActions from '../../store/modules/cart/actions';
 import { formatPrice } from '../../utils/format';
+
 import {
   Container,
   Products,
@@ -24,34 +28,22 @@ import {
   ButtonText,
 } from './styles';
 
-class Cart extends Component {
-  state = {
-    products: [
-      {
-        id: 1,
-        title: 'Tênis de Caminhada Leve Confortável',
-        price: 179.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-      },
-      {
-        id: 2,
-        title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-        price: 139.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-      },
-      {
-        id: 3,
-        title: 'Tênis Adidas Duramo Lite 2.0',
-        price: 219.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg',
-      },
-    ],
-  };
+function Cart({
+  navigation,
+  products,
+  total,
+  removeFromCart,
+  updateAmountRequest,
+}) {
+  function increment(product) {
+    updateAmountRequest(product.id, product.amount + 1);
+  }
 
-  renderProduct = ({ item }) => {
+  function decrement(product) {
+    updateAmountRequest(product.id, product.amount - 1);
+  }
+
+  function renderProduct({ item }) {
     return (
       <>
         <ProductInfo>
@@ -60,48 +52,63 @@ class Cart extends Component {
             <ProductTitle>{item.title}</ProductTitle>
             <ProductPrice>{formatPrice(item.price)}</ProductPrice>
           </ProductDetails>
-          <RemoveButton>
+          <RemoveButton onPress={() => removeFromCart(item.id)}>
             <Icon name="remove-shopping-cart" color="#7159C1" size={24} />
           </RemoveButton>
         </ProductInfo>
         <PriceInfo>
           <Amount>
-            <UpdateAmountButton>
+            <UpdateAmountButton onPress={() => decrement(item)}>
               <Icon name="remove-circle-outline" color="#7159C1" size={20} />
             </UpdateAmountButton>
-            <AmountInput>3</AmountInput>
-            <UpdateAmountButton>
+            <AmountInput>{item.amount}</AmountInput>
+            <UpdateAmountButton onPress={() => increment(item)}>
               <Icon name="add-circle-outline" color="#7159C1" size={20} />
             </UpdateAmountButton>
           </Amount>
-          <AmountPrice>{formatPrice(539)}</AmountPrice>
+          <AmountPrice>{item.subtotal}</AmountPrice>
         </PriceInfo>
       </>
     );
-  };
-
-  render() {
-    const { products } = this.state;
-
-    return (
-      <Container>
-        <Products>
-          <FlatList
-            data={products}
-            keyExtractor={item => String(item.id)}
-            renderItem={this.renderProduct}
-          />
-          <TotalInfo>
-            <TotalTitle>Total</TotalTitle>
-            <TotalPrice>{formatPrice(1619.1)}</TotalPrice>
-          </TotalInfo>
-          <FinishButton>
-            <ButtonText>Finalizar Pedido</ButtonText>
-          </FinishButton>
-        </Products>
-      </Container>
-    );
   }
+
+  return (
+    <Container>
+      <Products>
+        <FlatList
+          data={products}
+          keyExtractor={item => String(item.id)}
+          renderItem={renderProduct}
+        />
+        <TotalInfo>
+          <TotalTitle>Total</TotalTitle>
+          <TotalPrice>{total}</TotalPrice>
+        </TotalInfo>
+        <FinishButton>
+          <ButtonText>Finalizar Pedido</ButtonText>
+        </FinishButton>
+      </Products>
+    </Container>
+  );
 }
 
-export default Cart;
+const mapStateToProps = state => ({
+  products: state.cart.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.price * product.amount),
+  })),
+  total: formatPrice(
+    state.cart.reduce(
+      (total, product) => total + product.price * product.amount,
+      0
+    )
+  ),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Cart);

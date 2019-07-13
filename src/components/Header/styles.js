@@ -15,6 +15,8 @@ export const Container = styled.View`
   padding: 20px;
 `;
 
+export const HomeButton = styled(RectButton)``;
+
 export const Logo = styled.Image`
   width: 185px;
   height: 24px;
