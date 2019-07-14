@@ -36,7 +36,7 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function getProducts() {
+    async function loadProducts() {
       const response = await api.get('products');
 
       const data = response.data.map(product => ({
@@ -47,7 +47,7 @@ export default function Home() {
       setProducts(data);
     }
 
-    getProducts();
+    loadProducts();
   }, []);
 
   function handleAddProduct(id) {
@@ -56,7 +56,7 @@ export default function Home() {
 
   function renderProduct({ item }) {
     return (
-      <Product>
+      <Product key={item.id}>
         <ProductImage source={{ uri: item.image }} />
         <ProductTitle>{item.title}</ProductTitle>
         <PriceAndActionContainer>
@@ -79,6 +79,7 @@ export default function Home() {
         data={products}
         keyExtractor={item => String(item.id)}
         renderItem={renderProduct}
+        extraData={amount}
       />
     </Container>
   );
@@ -94,4 +95,13 @@ Home.propTypes = {
     id: PropTypes.number,
     priceFormatted: PropTypes.string,
   }),
+};
+
+Home.defaultProps = {
+  item: {
+    id: 0,
+    image: '',
+    title: '',
+    price: 0,
+  },
 };
